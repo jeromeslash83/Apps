@@ -1,103 +1,69 @@
-import tkinter
+import tkinter as tk
 from tkinter import messagebox
-import time
-import winsound
-from tkinter import simpledialog
+from tkinter import font
 
-# This deals with the main interface of the app.
-interface = tkinter.Tk()
-interface.configure(background='Black')
-interface.title('Timer')
-interface.geometry('600x450')
+class TicTacToe(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Tic Tac Toe")
+        self.geometry("300x300")
+        self.configure(bg="white")
+        self.activePlayer = "X"
+        self.board = [["" for _ in range(3)] for _ in range(3)]
+        self.font = font.Font(family='Helvetica', size=15, weight='bold')
 
-icon = tkinter.PhotoImage(file='tomato.png')
-interface.iconphoto(True, icon)
+        self.create_board()
 
-# this defines the app and runs the clock
-def the_clock():
-    """Sets the clock to 24 hour time"""
-    hour = time.strftime('%H')
-    minutes = time.strftime('%M')
-    seconds = time.strftime('%S')
-    day = time.strftime('%D')
+    def create_board(self):
+        for i in range(3):
+            for j in range(3):
+                button = tk.Button(self.master, text="", width=10, height=3, font=self.font,
+                                   command=lambda i=i, j=j: self.on_button_click(i, j), background= '#ffd343')
+                button.grid(row=i, column=j)
+                self.board[i][j] = button
 
-    label.config(text=f'{hour}:{minutes}:{seconds}')
-    label.after(1000, the_clock)
+    def on_button_click(self, i, j):
+        if self.board[i][j]["text"] == "":
+            self.board[i][j]["text"] = self.activePlayer
+            self.check_winner()
+            self.activePlayer = "O" if self.activePlayer == "X" else "X"
 
-    label2.config(text=f'{day}')
+    def check_winner(self):
+        for i in range(3):
+            if self.check_line(self.board[i][0]["text"], self.board[i][1]["text"], self.board[i][2]["text"]):
+                self.show_winner()
+                self.reset()
+                return
+            if self.check_line(self.board[0][i]["text"], self.board[1][i]["text"], self.board[2][i]["text"]):
+                self.show_winner()
+                self.reset()
+                return
 
+        if self.check_line(self.board[0][0]["text"], self.board[1][1]["text"], self.board[2][2]["text"]) or \
+                self.check_line(self.board[0][2]["text"], self.board[1][1]["text"], self.board[2][0]["text"]):
+            self.show_winner()
+            self.reset()
+            return
 
-label = tkinter.Label(interface, text='', font=('SF Pro Display', 72), foreground='White', background='Black')
-label.pack(pady=30)
-label2 = tkinter.Label(interface, text='', font=('SF Pro Display', 20), foreground='White', background='Black')
-label2.pack(pady=0)
+        # Check for draw
+        if all(button["text"] != "" for row in self.board for button in row):
+            messagebox.showinfo("Draw", "It's a draw!")
+            self.reset()
 
+    def check_line(self, a, b, c):
+        return a == b == c != ""
 
-# this runs the pomodoro function of the app.
-def start_pomodoro():
-    """Starts the pomodoro time to 50/10 intervals"""
-    work_time = simpledialog.askinteger("Work Time", "Enter the work time in minutes:", minvalue=1)
-    break_time = simpledialog.askinteger("Break Time", "Enter the break time in minutes:", minvalue=1)
+    def show_winner(self):
+        message = f"Player {self.activePlayer} wins!"
+        messagebox.showinfo("Congratulations!", message)
 
-    work_time_seconds = work_time * 60
-    break_time_seconds = break_time * 60
+    def reset(self):
+        for i in range(3):
+            for j in range(3):
+                self.board[i][j]["text"] = ""
 
-    # Flag to stop the loop
-    stop_flag = False
+        self.activePlayer = "X"
 
-    # Stop button event handler
-    def stop_pomodoro():
-        nonlocal stop_flag
-        stop_flag = True
-        pomodoro_label.config(text='00:00')
-        interface.update()
-
-    # Create and pack the stop button
-    stop_button = tkinter.Button(interface, text='Stop', font=('SF Pro Display', 10, 'bold'), background='Black', foreground='White', command=stop_pomodoro)
-    stop_button.pack(padx=10, pady=10)
-
-    cont = True
-    while cont == True and not stop_flag:
-        for i in range(work_time_seconds, -1, -1):
-            minute = i // 60
-            seconds = i % 60
-            pomodoro_label.config(text=f'{str(minute).zfill(2)}:{str(seconds).zfill(2)}')
-            interface.update()
-            time.sleep(1)
-            if stop_flag: break
-
-        if stop_flag: break
-
-        for i in range(5):
-            winsound.Beep(i + 100, 500)
-
-        messagebox.showinfo("Break time", f'{break_time} minute break')
-
-        if stop_flag: break
-
-        for i in range(break_time_seconds, -1, -1):
-            minute = i // 60
-            seconds = i % 60
-            pomodoro_label.config(text=f'{minute}:{seconds}')
-            interface.update()
-            time.sleep(1)
-            if stop_flag: break
-
-        if stop_flag: break
-
-        continuation = messagebox.askyesno('Do you want to continue?')
-        if continuation == True:
-            continue
-        else:
-            break
-
-    # Remove the stop button
-    stop_button.pack_forget()
-
-pomodoro_button = tkinter.Button(interface, text='Start Pomodoro', font=('SF Pro Display', 10, 'bold'), background='Black', foreground='White', command=start_pomodoro)
-pomodoro_button.pack(padx=10, pady=10)
-pomodoro_label = tkinter.Label(interface, text='', font=('SF Pro Display', 72), foreground='White', background='Black')
-pomodoro_label.pack(padx=10, pady=10)
-
-the_clock()
-interface.mainloop()
+    if __name__ == "__main__":
+        app = TicTacToe()
+        app.mainloop()
