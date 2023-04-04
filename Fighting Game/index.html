@@ -1,0 +1,80 @@
+<html>
+
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+        
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- red container div -->
+    <div style="position: relative; display: inline-block;">
+        <!-- smaller red container div -->
+        <div style="position: absolute; display: flex; width: 100%; align-items: center; justify-content: center;">
+            <!-- player health and mana bars -->
+            <div style="display: flex; flex-direction: column;">
+                <!-- player health bar -->
+                <div style="position: relative; height: 30px; width: 420px;">
+                    <div style="background-color: yellow; height: 30px; width: 420px;"></div>
+                    <div id="playerHealth" style="position: absolute; top: 0; left: 0; background-color: green; height: 30px; width: 420px;"></div>
+                </div>
+                <!-- mana bar -->
+                <div style="background-color: blue; height: 30px; width: 420px; margin-top: 0;"></div>
+            </div>
+            <!-- timer -->
+            <div id="timer" style="
+            background-color: red; 
+            width: 100px; 
+            height: 100px; 
+            margin-left: 
+            5px; 
+            margin-right: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px; 
+            font-family: Arial, sans-serif;
+            "><b>30</b>
+            </div>
+            <!-- enemy health and mana bars -->
+            <div style="display: flex; flex-direction: column">
+                <div style="position: relative; height: 30px; width: 420px;">
+                    <div style="background-color: yellow; height: 30px; width: 420px;"></div>
+                    <div id="enemyHealth" style="position: absolute; top: 0; left: 0; background-color: green; height: 30px; width: 420px;"></div>
+                </div>
+                <!-- enemy mana bar -->
+                <div style="background-color: blue; height: 30px; width: 420px; margin-top: 0;"></div>
+            </div>
+        </div>
+        <div id='displayText' style='
+        position: absolute;
+        color: white;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        font-size: 36'><b></b></div>
+        <canvas style="width: 100%;"></canvas>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
