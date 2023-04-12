@@ -1,6 +1,6 @@
 
 
-# *Plant Disease Image Preprocessing App*
+# *Image Preprocessing App*
 
 The Plant Disease Image Preprocessing App is a simple GUI application that allows users to apply various image preprocessing techniques on plant images, specifically for rice diseases. The app provides a user-friendly interface to select input and output folders, choose preprocessing techniques, and enter custom parameters for each technique.
 
