@@ -1,0 +1,73 @@
+import streamlit as st
+import streamlit_theme as stt
+import tensorflow as tf
+from PIL import Image
+import numpy as np
+
+# Load the TensorFlow model
+model = tf.saved_model.load('model')
+
+def preprocess_image(img):
+    # Calculate the aspect ratio of the original image
+    aspect_ratio = img.width / img.height
+
+    # Calculate the new width and height while preserving the aspect ratio
+    new_width = 1024
+    new_height = int(new_width / aspect_ratio)
+
+    # Resize the image
+    img = img.resize((new_width, new_height))
+
+    # Convert the PIL image to a NumPy array and normalize the pixel values
+    img = np.array(img) / 255.0
+
+    # Add a new axis to match the input shape expected by the model
+    img = np.expand_dims(img, axis=0)
+
+    return img
+
+def decode_prediction(prediction):
+    label_map = {0: 'Normal', 1: 'Sickle Cell'}
+    return label_map[np.argmax(prediction)]
+
+def main():
+    st.set_page_config(page_title="Sickle Cell Image Detection", layout="centered")
+    
+    # Set the theme to dark
+    stt.set_theme({'dark': True})
+
+    menu = ["Homepage", "Main Page", "About", "Privacy Policy"]
+    choice = st.sidebar.selectbox("Menu", menu)
+
+    if choice == "Homepage":
+        st.title("Sickle Cell Image Detection")
+        st.write("An AI-powered web app for detecting sickle cell disease from images.")
+        if st.button("Get Started"):
+            st.sidebar.write("Select 'Main Page' from the menu.")
+
+    elif choice == "Main Page":
+        st.title("Sickle Cell Image Detection")
+        uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
+
+        if uploaded_file is not None:
+            img = Image.open(uploaded_file)
+            st.image(img, caption="Uploaded Image", use_column_width=True)
+
+            if st.button("Predict"):
+                img = preprocess_image(img)
+                # Use the model to predict the class of the image
+                prediction = model(img)
+                label = decode_prediction(prediction)
+                st.write("The image is classified as:", label)
+
+    elif choice == "About":
+        st.title("About")
+        st.write("This web app uses an AI model to detect sickle cell disease from images.")
+        st.write("Contact information: [your_email@example.com]")
+
+    elif choice == "Privacy Policy":
+        st.title("Privacy Policy")
+        st.write("This web app does not store any user data. The images you upload are only processed in-memory and are not saved on our servers.")
+
+if __name__ == "__main__":
+    main()
