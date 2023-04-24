@@ -1,5 +1,3 @@
-Sure, here is a readme for a Pomodoro timer Google extension with a to-do list:
-
 # Introduction
 This is a Pomodoro timer Google extension that helps you stay focused and productive. It has a built-in to-do list so you can easily keep track of your tasks.
 
