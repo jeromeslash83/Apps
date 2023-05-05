@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body style="width: 500px; height: 600px;">
+    <div id="app">
+        <h1>Site Visit Planner</h1>
+        <form id="addVisitForm">
+            <label for="site">Site:</label>
+            <input type="text" id="site" required>
+            <label for="date">Date:</label>
+            <input type="date" id="date" required>
+            <label for="status">Status:</label>
+            <input type="text" id="status" required>
+            <label for="tasks">Tasks:</label>
+            <textarea id="tasks" rows="5" required></textarea>
+            <button type="submit">Add Visit</button>
+        </form>
+        <div id="visitList"></div>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>
